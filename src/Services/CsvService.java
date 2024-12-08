@@ -25,10 +25,19 @@ public class CsvService
         try
         {
             Scanner sc = new Scanner(new File(userTablePath));
+
             sc.useDelimiter("\n");
 
             // Skipping headers
-            sc.next();
+            if(sc.hasNext())
+            {
+                sc.next();
+            }
+            else
+            {
+                System.out.println("No members found");
+                return fetchedMembers;
+            }
 
             while(sc.hasNext())
             {

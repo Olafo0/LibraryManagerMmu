@@ -1,3 +1,4 @@
+import Modals.Member;
 import Services.LibraryService;
 
 import java.util.Scanner;
@@ -44,10 +45,11 @@ public class Main
             {
                 case 1:
                     System.out.println("Login");
-                    boolean validUser = library.userLogin();
-                    if(validUser)
+                    Member validUser = library.userLogin();
+                    if(validUser != null)
                     {
                         // log user
+                        userMainMenu(validUser);
                     }
                     else
                     {
@@ -63,5 +65,30 @@ public class Main
                     break;
             }
         }
+    }
+
+    public static void userMainMenu(Member signedUser)
+    {
+        if(signedUser.getRole().equals("Admin"))
+        {
+        }
+        else if(signedUser.getRole().equals("Member"))
+        {
+
+        }
+        else
+        {
+            System.out.println("Invalid Role");
+        }
+    }
+
+    public static void adminMenu()
+    {
+
+    }
+
+    public static void memberMenu()
+    {
+
     }
 }

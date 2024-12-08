@@ -54,12 +54,13 @@ public class LibraryService
             System.out.print("Username: ");
             username = scanner.nextLine();
 
-            for(Member member : members)
+            if(members.isEmpty() == false)
             {
-                if(username.equals(member.getUsername()))
-                {
-                    isUsernameValid = false;
-                    System.out.println("Username has already been taken");
+                for (Member member : members) {
+                    if (username.equals(member.getUsername())) {
+                        isUsernameValid = false;
+                        System.out.println("Username has already been taken");
+                    }
                 }
             }
         }
@@ -84,10 +85,8 @@ public class LibraryService
         while(isPasswordValid == false);
 
         int id;
-        if(members.size() == 0)
+        if(members.isEmpty())
         {
-            System.out.println(members.size() -1);
-            System.out.println("Nothing ");
             id = 1;
         }
         else
@@ -105,20 +104,26 @@ public class LibraryService
         ConsoleUtil.consoleClear();
     }
 
-    public boolean userLogin()
+    public Member userLogin()
     {
         Scanner scanner = new Scanner(System.in);
 
         String username = ConsoleUtil.getUserInput("Username");
         String password = ConsoleUtil.getUserInput("Password");
 
+        if(members.isEmpty())
+        {
+            return null;
+        }
+
         for(Member member : members)
         {
             if (username.equals(member.getUsername()) && password.equals(member.getPassword())) {
                 System.out.println("Logged in");
-                return true;
+
+                return member;
             }
         }
-        return false;
+        return null;
     }
 }
