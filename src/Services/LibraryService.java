@@ -1,5 +1,6 @@
 package Services;
 
+import Data.DataRepo;
 import Modals.*;
 import Utils.*;
 
@@ -12,230 +13,21 @@ import java.util.Scanner;
 public class LibraryService
 {
 
-    ArrayList<User> members = new ArrayList<User>();
-    ArrayList<Book> books = new ArrayList<Book>();
-    ArrayList<BookRecord> bookRecords = new ArrayList<BookRecord>();
+    private DataRepo repository;
 
-
-    // () () () User methods - - - - - - - - - - - - - -
-    public void Initilise()
+    public LibraryService()
     {
-        members = CsvService.getAllMembers();
-        books = CsvService.getAllBooks();
-        bookRecords = CsvService.getAllBookBorrows(books, members);
-        System.out.println("Loaded");
+        DataRepo.instance();
     }
 
-
-    public void viewAllUsers()
-    {
-        int choice = 0;
-        String query = "";
-        do
-        {
-            System.out.println(" + - - - | All users | - - - + ");
-            System.out.println("| Role    | Username                      |");
-            // Function responsible for printing out
-            userFilter(choice, query);
-
-            ConsoleUtil.consoleClear(2);
-            System.out.println(" | = Filter = = = = = = = = = = = = = = = | ");
-            System.out.println(" 1 - View all members");
-            System.out.println(" 2 - View all admins");
-            System.out.println(" 3 - Custom Search");
-            System.out.println(" 4 - Exit");
-
-            try
-            {
-                choice = Integer.parseInt(ConsoleUtil.getUserInput("Enter"));
-            }
-            catch (Exception e)
-            {
-                System.out.println("ERROR: Invalid input, please enter a number between 1 and 4");
-            }
-
-
-            if(choice == 3)
-            {
-                System.out.println("You can enter a Username, Role, Firstname, or even a Lastname");
-                query = ConsoleUtil.getUserInput("Enter");
-            }
-            else
-            {
-                query = "";
-            }
-        }
-        while(choice != 4);
-    }
-
-
-    public void userFilter(int filterBy, String query)
-    {
-        ArrayList<User> memberToIterate = new ArrayList<>();
-        if(filterBy == 0)
-        {
-            memberToIterate = members;
-        }
-        else if(filterBy == 1)
-        {
-            for(User user : members)
-            {
-                if(user.getRole().equals("Member"))
-                {
-                    memberToIterate.add(user);
-                }
-            }
-        }
-        else if(filterBy == 2)
-        {
-            for(User user : members)
-            {
-                if(user.getRole().equals("Admin"))
-                {
-                    memberToIterate.add(user);
-                }
-            }
-        }
-        else if(filterBy == 3)
-        {
-            for(User user : members)
-            {
-                if(user.getUsername().toLowerCase().contains(query.toLowerCase()) || user.getRole().toLowerCase().contains(query.toLowerCase())
-                        || user.getFirstname().toLowerCase().contains(query.toLowerCase())
-                        || user.getLastname().toLowerCase().contains(query.toLowerCase()))
-                {
-                    memberToIterate.add(user);
-                }
-            }
-        }
-
-        for (User user : memberToIterate)
-        {
-            System.out.println(ConsoleUtil.columnBoxHelper("| " + user.getRole(), 10) + ConsoleUtil.columnBoxHelper("| " + user.getUsername(), 30) + "|");
-        }
-    }
-
-    public void createNewUser()
-    {
-        Scanner scanner = new Scanner(System.in);
-
-        ConsoleUtil.consoleClear();
-
-        // First section
-        System.out.println(" = = = | Creating new account | = = = ");
-        System.out.println(" * Personal details 1 of 2 ");
-        System.out.println(" NOTE: All details are required");
-
-        String firstName = ConsoleUtil.getUserInput("First name");
-
-        String lastName = ConsoleUtil.getUserInput("Last name");
-
-        String institution = ConsoleUtil.getUserInput("Institution");
-
-        System.out.println();
-        System.out.println();
-
-
-        ConsoleUtil.consoleClear();
-        // Second section
-        System.out.println(" * Create account 2 of 2 ");
-        // Making sure that usernames are unique
-        String username;
-        boolean isUsernameValid;
-        do
-        {
-            isUsernameValid = true;
-
-            System.out.print("Username: ");
-            username = scanner.nextLine();
-
-            if(members.isEmpty() == false)
-            {
-                for (User member : members) {
-                    if (username.equals(member.getUsername())) {
-                        isUsernameValid = false;
-                        System.out.println("Username has already been taken");
-                    }
-                }
-            }
-        }
-        while(isUsernameValid == false);
-
-        boolean isPasswordValid = false;
-        String password;
-
-        // Sort out their order
-        System.out.println(" = * = * | Password criteria | * = * =");
-        System.out.println(" - At least 5 characters long");
-        System.out.println(" - Contains a numerical character");
-        System.out.println(" - Contains a special character");
-        System.out.println(" = * = * = = = = = = = = = = = * = * =");
-        do
-        {
-            System.out.print("Password: ");
-            password = scanner.nextLine();
-            isPasswordValid = PasswordUtil.PasswordCheck(password);
-
-        }
-        while(isPasswordValid == false);
-
-        int id;
-        if(members.isEmpty())
-        {
-            System.out.println("We here cuzz");
-            id = 1;
-        }
-        else
-        {
-            id = members.getLast().getId() + 1;
-        }
-        System.out.println("ID NUMBER: " + id);
-        Member newUser = new Member(id, "Member", username, password, firstName, lastName);
-        members.add(newUser);
-
-        // Add new member to a CSV file
-        CsvService.addNewMember(newUser);
-        System.out.println("Your new account has been created");
-        System.out.println("Please log in");
-        ConsoleUtil.consoleClear();
-    }
-
-    public User userLogin()
-    {
-        Scanner scanner = new Scanner(System.in);
-
-        String username = ConsoleUtil.getUserInput("Username");
-        String password = ConsoleUtil.getUserInput("Password");
-
-        if(members.isEmpty())
-        {
-            return null;
-        }
-
-        for(User member : members)
-        {
-            if (username.equals(member.getUsername()) && password.equals(member.getPassword()))
-            {
-                System.out.println("Logged in");
-
-                if(member.getRole().equals("Member"))
-                {
-                    return (new Member(member.id, member.Role ,member.Username, member.Password, member.Firstname, member.Lastname));
-                }
-                else if(member.getRole().equals("Admin"))
-                {
-                    return(new Admin(member.id, member.Role ,member.Username, member.Password, member.Firstname, member.Lastname));
-                }
-            }
-        }
-        return null;
-    }
 
 
     // () () () Library methods - - - - - - - - - - - - - -
 
     public void addNewBook()
     {
+        ArrayList<Book> books = DataRepo.instance().getAllBooks();
+
         ConsoleUtil.consoleClear();
         System.out.println(" = - = - | Adding a new book | - = - = ");
         String bookTitle = ConsoleUtil.getUserInput("Book Title");
@@ -271,14 +63,16 @@ public class LibraryService
         while(bookIdTaken);
 
         Book newBook = new Book(String.valueOf(newBookid) ,bookTitle, bookAuthor, bookISBM, false, bookGenre);
-        books.add(newBook);
-        CsvService.addNewBook(newBook);
+        DataRepo.instance().addBook(newBook);
+
         System.out.println("Your new book has been added to the system");
 
     }
 
     public void viewAllBooks()
     {
+        ArrayList<Book> books = DataRepo.instance().getAllBooks();
+
         for(int i = 0; i < books.size(); i += 2)
         {
             Book book1 = books.get(i);
@@ -355,6 +149,7 @@ public class LibraryService
 
     public void removeABook()
     {
+        ArrayList<Book> books = DataRepo.instance().getAllBooks();
 
         if(books.isEmpty())
         {
@@ -367,8 +162,9 @@ public class LibraryService
             {
                 if (book.getBookId().equals(bookId))
                 {
-                    books.remove(book);
-                    CsvService.removeABook(books);
+//                    books.remove(book);
+//                    CsvService.removeABook(books);
+                    DataRepo.instance().removeBook(book);
                     System.out.println("Book removed");
                 } else
                 {
@@ -381,6 +177,9 @@ public class LibraryService
 
     public void takeOutBook(Member member)
     {
+
+        ArrayList<Book> books = DataRepo.instance().getAllBooks();
+        ArrayList<BookRecord> bookRecords = DataRepo.instance().getAllBookRecords();
 
         viewAllBooks();
 
@@ -395,8 +194,8 @@ public class LibraryService
             {
                 book.setBorrowed(true);
                 BookRecord newBookRecord = new BookRecord(book, member, returnByDate);
-                bookRecords.add(newBookRecord);
-                CsvService.insertNewBookRecord(newBookRecord);
+                DataRepo.instance().addBookRecord(newBookRecord);
+//                CsvService.insertNewBookRecord(newBookRecord);
                 hasUserBorrowedBook = true;
                 break;
             }
@@ -415,6 +214,8 @@ public class LibraryService
 
     public void returnBook(Member member)
     {
+        ArrayList<BookRecord> bookRecords = DataRepo.instance().getAllBookRecords();
+
         viewBorrowedBooks(member);
 
         Scanner scanner = new Scanner(System.in);
@@ -429,8 +230,7 @@ public class LibraryService
             if(record.getBook().getBookId().equals(bookId) && record.getMember().getId() == member.getId())
             {
                 record.getBook().setBorrowed(false);
-                bookRecords.remove(record);
-                CsvService.removeBookRecord(bookRecords);
+                DataRepo.instance().removeBookRecord(record);
                 System.out.println("Book has been returned");
                 break;
             }
@@ -439,6 +239,7 @@ public class LibraryService
 
     public void viewBorrowedBooks(User member)
     {
+        ArrayList<BookRecord> bookRecords = DataRepo.instance().getAllBookRecords();
         ConsoleUtil.consoleClear();
 
         if(member instanceof Member)

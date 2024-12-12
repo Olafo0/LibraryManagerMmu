@@ -2,25 +2,22 @@ import Modals.Admin;
 import Modals.Member;
 import Modals.User;
 import Services.LibraryService;
+import Services.UserService;
 
 import javax.rmi.ssl.SslRMIClientSocketFactory;
 import java.util.Scanner;
 
 public class Main
 {
-    private static LibraryService library;
+    private static LibraryService libraryService;
+    private static UserService userService;
 
     public static void main(String[] args)
     {
-        library = new LibraryService();
-        // Read table data
-        library.Initilise();
+        libraryService = new LibraryService();
+        userService = new UserService();
 
-        // Prepare program
-
-        // Load login menu
-
-        mainMenu(library);
+        mainMenu();
 
     }
 
@@ -29,7 +26,7 @@ public class Main
 
     }
 
-    public static void mainMenu(LibraryService library)
+    public static void mainMenu()
     {
 
         boolean isAppRunning = true;
@@ -49,7 +46,7 @@ public class Main
             {
                 case 1:
                     System.out.println("Login");
-                    User validUser = library.userLogin();
+                    User validUser = userService.userLogin();
                     if(validUser != null)
                     {
                         // log user
@@ -62,7 +59,7 @@ public class Main
                     break;
                 case 2:
                     System.out.println("Create account");
-                    library.createNewUser();
+                    userService.createNewUser();
                     break;
                 case 3:
                     isAppRunning = false;
@@ -110,19 +107,19 @@ public class Main
             switch(choice)
             {
                 case 1:
-                    library.viewAllBooks();
+                    libraryService.viewAllBooks();
                     break;
                 case 2:
-                    library.addNewBook();
+                    libraryService.addNewBook();
                     break;
                 case 3:
-                    library.removeABook();
+                    libraryService.removeABook();
                     break;
                 case 4:
-                    library.viewBorrowedBooks(signedUser);
+                    libraryService.viewBorrowedBooks(signedUser);
                     break;
                 case 5:
-                    library.viewAllUsers();
+                    userService.viewAllUsers();
                     break;
             }
         }
@@ -156,16 +153,16 @@ public class Main
             switch(choice)
             {
                 case 1:
-                    library.viewAllBooks();
+                    libraryService.viewAllBooks();
                     break;
                 case 2:
-                    library.viewBorrowedBooks(signedUser);
+                    libraryService.viewBorrowedBooks(signedUser);
                     break;
                 case 3:
-                    library.takeOutBook(signedUser);
+                    libraryService.takeOutBook(signedUser);
                     break;
                 case 4:
-                    library.returnBook(signedUser);
+                    libraryService.returnBook(signedUser);
                     break;
             }
         }

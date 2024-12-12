@@ -165,7 +165,7 @@ public class CsvService
         }
     }
 
-    public static void addNewMember(Member newUser)
+    public static void addNewMember(User newUser)
     {
 
         File file = new File(userTablePath);
@@ -314,8 +314,6 @@ public class CsvService
         ArrayList<BookRecord> brList = new ArrayList<>();
         try
         {
-
-            System.out.println(UUID.randomUUID().toString());
             BufferedReader br = new BufferedReader(new FileReader(borrowTablePath));
 
             br.readLine();
@@ -360,6 +358,12 @@ public class CsvService
             }
             else
             {
+                FileWriter fw = new FileWriter(borrowTablePath);
+                fw.append("BookID, UserID, returnBy");
+                fw.append("\n");
+
+                fw.flush();
+                fw.close();
                 return brList;
             }
         }
