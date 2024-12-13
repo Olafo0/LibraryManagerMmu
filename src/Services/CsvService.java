@@ -37,6 +37,13 @@ public class CsvService
             }
             else
             {
+                FileWriter fw = new FileWriter(userTablePath);
+                fw.append("Id; Role; Username; Password; Firstname; Lastname");
+                fw.append("\n");
+
+                fw.flush();
+                fw.close();
+
                 System.out.println("No members found");
                 return fetchedMembers;
             }
@@ -69,6 +76,13 @@ public class CsvService
                 File file = new File(userTablePath);
                 file.createNewFile();
 
+                FileWriter fw = new FileWriter(userTablePath);
+                fw.append("Id; Role; Username; Password; Firstname; Lastname");
+                fw.append("\n");
+
+                fw.flush();
+                fw.close();
+
                 if(file.exists())
                 {
                     System.out.println("Issue resolved");
@@ -87,6 +101,11 @@ public class CsvService
 
             return fetchedMembers;
         }
+        catch(IOException e)
+        {
+            System.out.println("ERROR: " + e.getMessage());
+        }
+        return fetchedMembers;
     }
 
 
@@ -103,8 +122,16 @@ public class CsvService
             if (scanner.hasNext())
             {
                 scanner.next();
-            } else
+            }
+            else
             {
+                FileWriter fw = new FileWriter(bookTablePath);
+                fw.append("BookId; Title; Author; ISBM; Borrowed; Genre");
+                fw.append("\n");
+
+                fw.flush();
+                fw.close();
+
                 System.out.println("No books found");
                 return fetchedBooks;
             }
@@ -163,6 +190,11 @@ public class CsvService
 
             return fetchedBooks;
         }
+        catch (IOException e)
+        {
+            System.out.println("ERROR: " + e.getMessage());
+        }
+        return fetchedBooks;
     }
 
     public static void addNewMember(User newUser)
@@ -348,8 +380,11 @@ public class CsvService
                         }
                     }
 
-                    brList.add(new BookRecord(bookToUse, userToUse, returnBy));
 
+                    if(userToUse != null || bookToUse != null)
+                    {
+                        brList.add(new BookRecord(bookToUse, userToUse, returnBy));
+                    }
                     lineRead = br.readLine();
                 }
                 br.close();

@@ -6,7 +6,7 @@ public class ConsoleUtil
 {
     public static void consoleClear()
     {
-        int amoutOfNewLines = 10;
+        int amoutOfNewLines = 20;
 
         for(int i = 0; i < amoutOfNewLines; i++)
         {

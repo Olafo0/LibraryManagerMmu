@@ -12,7 +12,6 @@ import java.util.Scanner;
 
 public class LibraryService
 {
-
     private DataRepo repository;
 
     public LibraryService()
@@ -20,15 +19,11 @@ public class LibraryService
         DataRepo.instance();
     }
 
-
-
-    // () () () Library methods - - - - - - - - - - - - - -
-
     public void addNewBook()
     {
         ArrayList<Book> books = DataRepo.instance().getAllBooks();
-
         ConsoleUtil.consoleClear();
+
         System.out.println(" = - = - | Adding a new book | - = - = ");
         String bookTitle = ConsoleUtil.getUserInput("Book Title");
         String bookAuthor = ConsoleUtil.getUserInput("Author");
@@ -64,14 +59,18 @@ public class LibraryService
 
         Book newBook = new Book(String.valueOf(newBookid) ,bookTitle, bookAuthor, bookISBM, false, bookGenre);
         DataRepo.instance().addBook(newBook);
-
-        System.out.println("Your new book has been added to the system");
+        ConsoleUtil.consoleClear();
+        System.out.println("NOTE: Your new book has been added to the system");
 
     }
 
     public void viewAllBooks()
     {
+        ConsoleUtil.consoleClear();
         ArrayList<Book> books = DataRepo.instance().getAllBooks();
+
+        System.out.println("+====================================================================================+");
+        System.out.println("+                                Book collection                                     +");
 
         for(int i = 0; i < books.size(); i += 2)
         {
@@ -84,40 +83,40 @@ public class LibraryService
             }
 
             int spaceLength = 40;
-            System.out.println("+---------------------------------------------+");
+            System.out.println("+=======================================|========================================+");
 
-            System.out.print(ConsoleUtil.columnBoxHelper("| Book ID: " + book1.getBookId(), spaceLength));
+            System.out.print(ConsoleUtil.columnBoxHelper("| * Book ID: " + book1.getBookId(), spaceLength));
             if(book2 != null)
             {
-                System.out.print(ConsoleUtil.columnBoxHelper("| Book Id: " + book2.getBookId(), spaceLength));
+                System.out.print(ConsoleUtil.columnBoxHelper("| * Book Id: " + book2.getBookId(), spaceLength) + " |");
             }
             System.out.println();
 
             System.out.print(ConsoleUtil.columnBoxHelper("| Title: " + book1.getTitle(), spaceLength));
             if(book2 != null)
             {
-                System.out.print(ConsoleUtil.columnBoxHelper("| Title: " + book2.getTitle(), spaceLength));
+                System.out.print(ConsoleUtil.columnBoxHelper("| Title: " + book2.getTitle(), spaceLength) + " |");
             }
             System.out.println();
 
             System.out.print(ConsoleUtil.columnBoxHelper("| Author: " + book1.Author, spaceLength));
             if(book2 != null)
             {
-                System.out.print(ConsoleUtil.columnBoxHelper("| Author: " + book2.getAuthor(), spaceLength));
+                System.out.print(ConsoleUtil.columnBoxHelper("| Author: " + book2.getAuthor(), spaceLength) + " |");
             }
             System.out.println();
 
             System.out.print(ConsoleUtil.columnBoxHelper("| Genre: " + book1.Genre, spaceLength));
             if(book2 != null)
             {
-                System.out.print(ConsoleUtil.columnBoxHelper("| Genre: " + book2.getGenre(), spaceLength));
+                System.out.print(ConsoleUtil.columnBoxHelper("| Genre: " + book2.getGenre(), spaceLength) + " |");
             }
             System.out.println();
 
             System.out.print(ConsoleUtil.columnBoxHelper( "| ISBM: " + book1.ISBM, spaceLength));
             if(book2 != null)
             {
-                System.out.print(ConsoleUtil.columnBoxHelper("| ISBM: "+ book2.getISBM(), spaceLength));
+                System.out.print(ConsoleUtil.columnBoxHelper("| ISBM: "+ book2.getISBM(), spaceLength) + " |");
             }
             System.out.println();
 
@@ -138,38 +137,47 @@ public class LibraryService
                 }
                 else
                 {
-                    System.out.print(ConsoleUtil.columnBoxHelper("| Availability: Available", spaceLength));
+                    System.out.print(ConsoleUtil.columnBoxHelper("| Availability: Available", spaceLength) + " |");
                 }
             }
 
             System.out.println();
-            System.out.println("+---------------------------------------------+");
+            System.out.println("+=======================================|========================================+");
         }
     }
 
     public void removeABook()
     {
         ArrayList<Book> books = DataRepo.instance().getAllBooks();
+        ConsoleUtil.consoleClear();
 
         if(books.isEmpty())
         {
-            System.out.println("No books to remove");
+            System.out.println("NOTE: No books to remove");
         }
         else
         {
+            viewAllBooks();
+
+            ConsoleUtil.consoleClear(2);
+            boolean bookFound = false;
+            System.out.println("Please the book id of the book you want to remove");
             String bookId = ConsoleUtil.getUserInput("Book ID");
             for (Book book : books)
             {
                 if (book.getBookId().equals(bookId))
                 {
-//                    books.remove(book);
-//                    CsvService.removeABook(books);
                     DataRepo.instance().removeBook(book);
-                    System.out.println("Book removed");
-                } else
-                {
-                    System.out.println("Book not found");
+                    bookFound = true;
+                    ConsoleUtil.consoleClear();
+                    System.out.println("Book has been removed");
+                    break;
                 }
+            }
+            if(bookFound == false)
+            {
+                ConsoleUtil.consoleClear();
+                System.out.println("NOTE: Book can't be found. Either incorrect Book Id or it doesn't exist");
             }
         }
     }
@@ -177,7 +185,7 @@ public class LibraryService
 
     public void takeOutBook(Member member)
     {
-
+        ConsoleUtil.consoleClear();
         ArrayList<Book> books = DataRepo.instance().getAllBooks();
         ArrayList<BookRecord> bookRecords = DataRepo.instance().getAllBookRecords();
 
@@ -195,7 +203,6 @@ public class LibraryService
                 book.setBorrowed(true);
                 BookRecord newBookRecord = new BookRecord(book, member, returnByDate);
                 DataRepo.instance().addBookRecord(newBookRecord);
-//                CsvService.insertNewBookRecord(newBookRecord);
                 hasUserBorrowedBook = true;
                 break;
             }
@@ -203,19 +210,21 @@ public class LibraryService
 
         if(hasUserBorrowedBook)
         {
-            System.out.println("Book has been borrowed. The return date is (" + returnByDate + ")");
+            ConsoleUtil.consoleClear();
+            System.out.println("NOTE: Book has been borrowed. The return date is (" + returnByDate + ")");
         }
         else
         {
-            System.out.println("Book not available or not found");
+            ConsoleUtil.consoleClear();
+            System.out.println("NOTE: Book not available or not found");
         }
     }
 
 
     public void returnBook(Member member)
     {
+        ConsoleUtil.consoleClear();
         ArrayList<BookRecord> bookRecords = DataRepo.instance().getAllBookRecords();
-
         viewBorrowedBooks(member);
 
         Scanner scanner = new Scanner(System.in);
@@ -224,6 +233,7 @@ public class LibraryService
         System.out.println("Enter the book ID to return it");
         String bookId = ConsoleUtil.getUserInput("Enter: ");
 
+        boolean bookFound = false;
         for(BookRecord record : bookRecords)
         {
             // Check if ID and signed in member match the book borrowed
@@ -231,9 +241,17 @@ public class LibraryService
             {
                 record.getBook().setBorrowed(false);
                 DataRepo.instance().removeBookRecord(record);
-                System.out.println("Book has been returned");
+                bookFound = true;
+                ConsoleUtil.consoleClear();
+                System.out.println("NOTE: Book has been returned");
                 break;
             }
+        }
+
+        if(bookFound == false)
+        {
+            ConsoleUtil.consoleClear();
+            System.out.println("NOTE: Book not found. Incorrect book Id entered");
         }
     }
 
@@ -286,6 +304,4 @@ public class LibraryService
             System.out.println("| = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = |");
         }
     }
-
-
 }

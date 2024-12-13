@@ -105,18 +105,19 @@ public class UserService
 
     public void createNewUser()
     {
+        ConsoleUtil.consoleClear();
         ArrayList<User> users = DataRepo.instance().getAllUsers();
         Scanner scanner = new Scanner(System.in);
 
         ConsoleUtil.consoleClear();
 
         boolean adminAllow = false;
-        System.out.print("Do you want to create a admin account (y/n");
+        System.out.println("Do you want to create a admin account (y/n)");
         String userRoleChoice = ConsoleUtil.getUserInput("Enter").toLowerCase();
         if(userRoleChoice.equals("y"))
         {
             //Code to create an Admin account
-            System.out.print("Code is required for Admin");
+            System.out.println("Code is required for Admin");
             int secretCode = Integer.parseInt(ConsoleUtil.getUserInput("Enter"));
             if(secretCode == 331)
             {
@@ -190,7 +191,6 @@ public class UserService
         int id;
         if(users.isEmpty())
         {
-            System.out.println("We here cuzz");
             id = 1;
         }
         else
@@ -205,9 +205,6 @@ public class UserService
 
         Member newUser = new Member(id, userRole, username, password, firstName, lastName);
         DataRepo.instance().addUser(newUser);
-
-        // Add new member to a CSV file
-//        CsvService.addNewMember(newUser);
         System.out.println("Your new account has been created");
         System.out.println("Please log in");
         ConsoleUtil.consoleClear();
@@ -215,6 +212,8 @@ public class UserService
 
     public User userLogin()
     {
+        ConsoleUtil.consoleClear();
+        System.out.println("+ - - - - - - | Login | - - - - - - +");
         ArrayList<User> users = DataRepo.instance().getAllUsers();
         Scanner scanner = new Scanner(System.in);
 
@@ -230,6 +229,7 @@ public class UserService
         {
             if (username.equals(member.getUsername()) && password.equals(member.getPassword()))
             {
+                ConsoleUtil.consoleClear();
                 System.out.println("Logged in");
 
                 if(member.getRole().equals("Member"))
