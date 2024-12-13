@@ -39,6 +39,19 @@ public class DataRepo
         return books;
     }
 
+    public ArrayList<Book> getAllAvailableBooks()
+    {
+        ArrayList<Book> availableBooks = new ArrayList<>();
+        for(Book book : books)
+        {
+            if(book.getBorrowed() != true)
+            {
+                availableBooks.add(book);
+            }
+        }
+
+        return availableBooks;
+    }
     public ArrayList<BookRecord> getAllBookRecords()
     {
         return bookRecords;

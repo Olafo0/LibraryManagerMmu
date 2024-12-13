@@ -64,18 +64,75 @@ public class LibraryService
 
     }
 
-    public void viewAllBooks()
+
+
+    public void bookFilter()
     {
+        viewAllBooks(DataRepo.instance().getAllAvailableBooks());
+        int choice = 0;
+        do
+        {
+            ConsoleUtil.consoleClear(2);
+            System.out.println(" 1 - Search by Title, Author, BookID, Genre, IBSM");
+            System.out.println(" 2 - View all available books");
+            System.out.println(" 3 - View all books");
+            System.out.println(" 4 - Exit");
+
+            choice = Integer.parseInt(ConsoleUtil.getUserInput("Enter"));
+
+            switch(choice)
+            {
+                case 1:
+                    System.out.println("You can enter the following Title, Author, BookID, Genre and IBSM");
+                    String query = ConsoleUtil.getUserInput("Enter");
+                    ArrayList<Book> filteredBooks = booksToView(query);
+                    viewAllBooks(filteredBooks);
+                    break;
+                case 2:
+                    viewAllBooks(DataRepo.instance().getAllAvailableBooks());
+                    break;
+                case 3:
+                    viewAllBooks(DataRepo.instance().getAllBooks());
+            }
+
+
+        }
+        while(choice != 4);
+
         ConsoleUtil.consoleClear();
+    }
+
+    public ArrayList<Book> booksToView(String query)
+    {
         ArrayList<Book> books = DataRepo.instance().getAllBooks();
 
-        System.out.println("+====================================================================================+");
-        System.out.println("+                                Book collection                                     +");
+        ArrayList<Book> filteredBooks = new ArrayList<>();
+        for(Book book : books)
+        {
+            if (book.getTitle().contains(query.toLowerCase()) || book.getAuthor().toLowerCase().contains(query.toLowerCase())
+                    || book.getBookId().toLowerCase().contains(query.toLowerCase())
+                    || book.getISBM().toLowerCase().contains(query.toLowerCase())
+                    || book.getGenre().toLowerCase().contains(query.toLowerCase()))
+            {
+                filteredBooks.add(book);
+            }
+        }
+
+        return filteredBooks;
+    }
+
+
+
+    public void viewAllBooks(ArrayList<Book> books)
+    {
+        ConsoleUtil.consoleClear();
+
+        System.out.println("+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - +");
+        System.out.println("+                                Book collection                                  +");
 
         for(int i = 0; i < books.size(); i += 2)
         {
             Book book1 = books.get(i);
-
             Book book2 = null;
             if(i + 1 < books.size())
             {
@@ -83,40 +140,77 @@ public class LibraryService
             }
 
             int spaceLength = 40;
-            System.out.println("+=======================================|========================================+");
 
-            System.out.print(ConsoleUtil.columnBoxHelper("| * Book ID: " + book1.getBookId(), spaceLength));
+            String header1 = ConsoleUtil.columnBoxHelper(String.valueOf(i + 1), 5);
+
+            String header2 = "";
             if(book2 != null)
             {
-                System.out.print(ConsoleUtil.columnBoxHelper("| * Book Id: " + book2.getBookId(), spaceLength) + " |");
+                header2 = ConsoleUtil.columnBoxHelper(String.valueOf(i + 2), 5);
+            }
+
+            if(book2 != null)
+            {
+                System.out.println("+==( " + header1 + " )============================|=====( " + header2 + " )===========================+");
+            }
+            else
+            {
+                System.out.println("+==( " + header1 + " )============================|");
+            }
+
+            System.out.print(ConsoleUtil.columnBoxHelper("| * BOOK ID: " + book1.getBookId(), spaceLength));
+
+            if(book2 != null)
+            {
+                System.out.print(ConsoleUtil.columnBoxHelper("| * BOOK ID: " + book2.getBookId(), spaceLength) + "  |");
+            }
+            else
+            {
+                System.out.print("|");
             }
             System.out.println();
 
             System.out.print(ConsoleUtil.columnBoxHelper("| Title: " + book1.getTitle(), spaceLength));
             if(book2 != null)
             {
-                System.out.print(ConsoleUtil.columnBoxHelper("| Title: " + book2.getTitle(), spaceLength) + " |");
+                System.out.print(ConsoleUtil.columnBoxHelper("| Title: " + book2.getTitle(), spaceLength) + "  |");
+            }
+            else
+            {
+                System.out.print("|");
             }
             System.out.println();
 
             System.out.print(ConsoleUtil.columnBoxHelper("| Author: " + book1.Author, spaceLength));
             if(book2 != null)
             {
-                System.out.print(ConsoleUtil.columnBoxHelper("| Author: " + book2.getAuthor(), spaceLength) + " |");
+                System.out.print(ConsoleUtil.columnBoxHelper("| Author: " + book2.getAuthor(), spaceLength) + "  |");
+            }
+            else
+            {
+                System.out.print("|");
             }
             System.out.println();
 
             System.out.print(ConsoleUtil.columnBoxHelper("| Genre: " + book1.Genre, spaceLength));
             if(book2 != null)
             {
-                System.out.print(ConsoleUtil.columnBoxHelper("| Genre: " + book2.getGenre(), spaceLength) + " |");
+                System.out.print(ConsoleUtil.columnBoxHelper("| Genre: " + book2.getGenre(), spaceLength) + "  |");
+            }
+            else
+            {
+                System.out.print("|");
             }
             System.out.println();
 
-            System.out.print(ConsoleUtil.columnBoxHelper( "| ISBM: " + book1.ISBM, spaceLength));
+            System.out.print(ConsoleUtil.columnBoxHelper("| ISBM: " + book1.ISBM, spaceLength));
             if(book2 != null)
             {
-                System.out.print(ConsoleUtil.columnBoxHelper("| ISBM: "+ book2.getISBM(), spaceLength) + " |");
+                System.out.print(ConsoleUtil.columnBoxHelper("| ISBM: " + book2.getISBM(), spaceLength) + "  |");
+            }
+            else
+            {
+                System.out.print("|");
             }
             System.out.println();
 
@@ -137,12 +231,25 @@ public class LibraryService
                 }
                 else
                 {
-                    System.out.print(ConsoleUtil.columnBoxHelper("| Availability: Available", spaceLength) + " |");
+                    System.out.print(ConsoleUtil.columnBoxHelper("| Availability: Available", spaceLength) + "  |");
                 }
+            }
+            else
+            {
+                System.out.print("|");
             }
 
             System.out.println();
-            System.out.println("+=======================================|========================================+");
+
+            if(book2 != null)
+            {
+                System.out.println("+=======================================|=========================================+");
+            }
+            else
+            {
+                System.out.println("+=======================================|");
+
+            }
         }
     }
 
@@ -157,7 +264,7 @@ public class LibraryService
         }
         else
         {
-            viewAllBooks();
+            viewAllBooks(DataRepo.instance().getAllAvailableBooks());
 
             ConsoleUtil.consoleClear(2);
             boolean bookFound = false;
@@ -187,9 +294,8 @@ public class LibraryService
     {
         ConsoleUtil.consoleClear();
         ArrayList<Book> books = DataRepo.instance().getAllBooks();
-        ArrayList<BookRecord> bookRecords = DataRepo.instance().getAllBookRecords();
 
-        viewAllBooks();
+        viewAllBooks(DataRepo.instance().getAllAvailableBooks());
 
         boolean hasUserBorrowedBook = false;
         LocalDate returnByDate = LocalDate.now().plusMonths(1);

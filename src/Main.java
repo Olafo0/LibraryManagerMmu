@@ -103,7 +103,7 @@ public class Main
             try
             {
                 System.out.println("= * = * = | Admin Menu | = * = * = ");
-                System.out.println("1 - View all books");
+                System.out.println("1 - View books");
                 System.out.println("2 - Add a new book");
                 System.out.println("3 - Remove a book");
                 System.out.println("4 - View book borrowings");
@@ -118,7 +118,7 @@ public class Main
                 switch (choice)
                 {
                     case 1:
-                        libraryService.viewAllBooks();
+                        libraryService.bookFilter();
                         break;
                     case 2:
                         libraryService.addNewBook();
@@ -162,7 +162,7 @@ public class Main
             try
             {
                 System.out.println("= * = * = | Member Menu | = * = * = ");
-                System.out.println("1 - View all books");
+                System.out.println("1 - View books");
                 System.out.println("2 - View borrowed books");
                 System.out.println("3 - Take out a book");
                 System.out.println("4 - Return a book");
@@ -176,7 +176,7 @@ public class Main
                 switch (choice)
                 {
                     case 1:
-                        libraryService.viewAllBooks();
+                        libraryService.bookFilter();
                         break;
                     case 2:
                         libraryService.viewBorrowedBooks(signedUser);
