@@ -43,7 +43,7 @@ public class CsvService
 
             while(sc.hasNext())
             {
-                String[] fetchedUser = sc.next().split(",");
+                String[] fetchedUser = sc.next().split(";");
 
                 int id = Integer.parseInt(fetchedUser[0]);
                 String role = fetchedUser[1];
@@ -111,7 +111,7 @@ public class CsvService
 
             while (scanner.hasNext())
             {
-                String[] fetchedBook = scanner.next().split(",");
+                String[] fetchedBook = scanner.next().split(";");
 
                 String bookId = fetchedBook[0];
                 String title = fetchedBook[1];
@@ -139,7 +139,7 @@ public class CsvService
                 f.createNewFile();
 
                 FileWriter fw = new FileWriter(bookTablePath);
-                fw.append("BookId, Title, Author, ISBM, Borrowed, Genre\n");
+                fw.append("BookId; Title; Author; ISBM; Borrowed; Genre");
                 fw.append("\n");
 
                 fw.flush();
@@ -182,7 +182,7 @@ public class CsvService
                 if(firstLine == null)
                 {
                     FileWriter fw = new FileWriter(file, true); // Open in append mode
-                    fw.append("Id,Role,Username,Password,Firstname,Lastname");
+                    fw.append("Id; Role; Username; Password; Firstname; Lastname");
                     fw.append("\n");
                     fw.flush();
                     fw.close();
@@ -194,7 +194,7 @@ public class CsvService
                 System.out.println("Creating new file");
                 file.createNewFile();
                 FileWriter fw = new FileWriter(userTablePath);
-                fw.append("Id,Role,Username,Password,Firstname,Lastname");
+                fw.append("Id; Role; Username; Password; Firstname; Lastname");
                 fw.append("\n");
 
                 fw.flush();
@@ -208,7 +208,7 @@ public class CsvService
         try
         {
             FileWriter fileWriter = new FileWriter(userTablePath, true);
-            fileWriter.append(newUser.id + "," + newUser.Role + "," + newUser.Username + "," + newUser.Password + "," + newUser.Firstname + "," + newUser.Lastname);
+            fileWriter.append(newUser.id + ";" + newUser.Role + ";" + newUser.Username + ";" + newUser.Password + ";" + newUser.Firstname + ";" + newUser.Lastname);
             fileWriter.append("\n");
             fileWriter.flush();
             fileWriter.close();
@@ -235,7 +235,7 @@ public class CsvService
                 if(firstLine == null)
                 {
                     FileWriter fw = new FileWriter(file, true);
-                    fw.append("BookId, Title, Author, ISBM, Borrowed, Genre");
+                    fw.append("BookId; Title; Author; ISBM; Borrowed; Genre");
                     fw.append("\n");
                     fw.flush();
                     fw.close();
@@ -246,7 +246,7 @@ public class CsvService
                 System.out.println("Creating a new file");
                 file.createNewFile();
                 FileWriter fw = new FileWriter(bookTablePath);
-                fw.append("BookId, Title, Author, ISBM, Borrowed, Genre");
+                fw.append("BookId; Title; Author; ISBM; Borrowed; Genre");
                 fw.append("\n");
 
                 fw.flush();
@@ -261,7 +261,7 @@ public class CsvService
         try
         {
             FileWriter fw = new FileWriter(bookTablePath, true);
-            fw.append(newBook.getBookId() + "," + newBook.Title + "," + newBook.Author + "," + newBook.ISBM + "," + newBook.Borrowed + "," + newBook.Genre);
+            fw.append(newBook.getBookId() + ";" + newBook.Title + ";" + newBook.Author + ";" + newBook.ISBM + ";" + newBook.Borrowed + ";" + newBook.Genre);
             fw.append("\n");
             fw.flush();
             fw.close();
@@ -289,12 +289,12 @@ public class CsvService
         try
         {
             FileWriter fw = new FileWriter(bookTablePath, true);
-            fw.append("BookId, Title, Author, ISBM, Borrowed, Genre");
+            fw.append("BookId; Title; Author; ISBM; Borrowed; Genre");
             fw.append("\n");
 
             for(Book book : newBookList)
             {
-                fw.append(book.getBookId() + "," + book.Title + "," + book.Author + "," + book.ISBM + "," + book.Borrowed + "," + book.Genre);
+                fw.append(book.getBookId() + ";" + book.Title + ";" + book.Author + ";" + book.ISBM + ";" + book.Borrowed + ";" + book.Genre);
                 fw.append("\n");
             }
 
@@ -324,7 +324,7 @@ public class CsvService
             {
                 while (lineRead != null)
                 {
-                    String[] fetchedData = lineRead.split(",");
+                    String[] fetchedData = lineRead.split(";");
 
                     String bookId = fetchedData[0];
                     String UserId = fetchedData[1];
@@ -359,7 +359,7 @@ public class CsvService
             else
             {
                 FileWriter fw = new FileWriter(borrowTablePath);
-                fw.append("BookID, UserID, returnBy");
+                fw.append("BookID; UserID; returnBy");
                 fw.append("\n");
 
                 fw.flush();
@@ -379,7 +379,7 @@ public class CsvService
                 f.createNewFile();
 
                 FileWriter fw = new FileWriter(borrowTablePath);
-                fw.append("BookID, UserID, returnBy");
+                fw.append("BookID; UserID; returnBy");
                 fw.append("\n");
 
                 fw.flush();
@@ -424,7 +424,7 @@ public class CsvService
             if (firstLine == null)
             {
                 FileWriter fw = new FileWriter(file, true); // Open in append mode
-                fw.append("Id,Role,Username,Password,Firstname,Lastname");
+                fw.append("Id; Role; Username; Password; Firstname; Lastname");
                 fw.append("\n");
                 fw.flush();
                 fw.close();
@@ -439,7 +439,7 @@ public class CsvService
         {
             FileWriter fw = new FileWriter(borrowTablePath, true);
 
-            fw.append(newBookRecord.getBook().getISBM() + "," + newBookRecord.getMember().getUsername() + "," + newBookRecord.getReturnDate());
+            fw.append(newBookRecord.getBook().getISBM() + ";" + newBookRecord.getMember().getUsername() + ";" + newBookRecord.getReturnDate());
             fw.append("\n");
 
             fw.flush();
@@ -468,12 +468,12 @@ public class CsvService
         try
         {
             FileWriter fw = new FileWriter(borrowTablePath, true);
-            fw.append("BookID, UserID, returnBy");
+            fw.append("BookID; UserID; returnBy");
             fw.append("\n");
 
             for(BookRecord record : newBookRecordList)
             {
-                fw.append(record.getBook().getISBM() + "," + record.getMember().getUsername() + "," + record.getReturnDate());
+                fw.append(record.getBook().getISBM() + ";" + record.getMember().getUsername() + ";" + record.getReturnDate());
                 fw.append("\n");
             }
 

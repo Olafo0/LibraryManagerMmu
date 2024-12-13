@@ -132,7 +132,7 @@ public class LibraryService
 
             if(book2 != null)
             {
-                if(book1.Borrowed)
+                if(book2.Borrowed)
                 {
                     System.out.print(ConsoleUtil.columnBoxHelper("| Availability: Not available", spaceLength));
                 }
