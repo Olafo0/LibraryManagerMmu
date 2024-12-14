@@ -4,21 +4,36 @@ import Data.DataRepo;
 import Modals.*;
 import Utils.*;
 
-import java.awt.color.ICC_ColorSpace;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
+
+/*
+    a service which handles all the library logic part of the program
+    this class is the main part of the app
+ */
 public class LibraryService
 {
     private DataRepo repository;
 
+    /*
+     When the libraryService is first initilised
+
+     We also initilise the DataRepo class which is responsible for storing and accessing our data
+     that is used through the program
+
+     */
     public LibraryService()
     {
         DataRepo.instance();
     }
 
+    /*
+    A method that adds a new book to the library.
+    It gets the details required and adds it to our csv file
+     */
     public void addNewBook()
     {
         ArrayList<Book> books = DataRepo.instance().getAllBooks();
@@ -35,10 +50,15 @@ public class LibraryService
         // checks if bookid is taken
         int newBookid = 0;
         boolean bookIdTaken = false;
+        /*
+        This  while loop is responsible for generating and checking a bookid.
+        It preforms  a check to ensure that no duplicate id is generated and if a duplicate id
+        is generated it repeats the process
+         */
         do
         {
             bookIdTaken = false;
-            int randomIdNumber = random.nextInt(10);
+            int randomIdNumber = random.nextInt(750);
 
             for(Book book : books)
             {
@@ -57,7 +77,9 @@ public class LibraryService
         }
         while(bookIdTaken);
 
+        // Creating the new book
         Book newBook = new Book(String.valueOf(newBookid) ,bookTitle, bookAuthor, bookISBM, false, bookGenre);
+        // adding the new book to a list and appending it in the csv file through the centralised class
         DataRepo.instance().addBook(newBook);
         ConsoleUtil.consoleClear();
         System.out.println("NOTE: Your new book has been added to the system");
@@ -65,14 +87,20 @@ public class LibraryService
     }
 
 
-
+    /*
+        a bookFilter function is responsbile for getting and applying filters
+         when showing the user books
+     */
     public void bookFilter()
     {
+        // Display to the user all of the available books
         viewAllBooks(DataRepo.instance().getAllAvailableBooks());
+
         int choice = 0;
         do
         {
             ConsoleUtil.consoleClear(2);
+            // Provide the user with potential filters
             System.out.println(" 1 - Search by Title, Author, BookID, Genre, IBSM");
             System.out.println(" 2 - View all available books");
             System.out.println(" 3 - View all books");
@@ -82,16 +110,28 @@ public class LibraryService
 
             switch(choice)
             {
+                // Case 1 - Search
                 case 1:
+                    /*
+                       This in a way is a custom filter. It allows the user to enter the allowed
+                       whatever they want as long as it fits one of the criteria and returns book(s)
+                       that match to whatever is found in the csv files
+                     */
                     System.out.println("You can enter the following Title, Author, BookID, Genre and IBSM");
                     String query = ConsoleUtil.getUserInput("Enter");
+                    //booksToView is responsvile for fetching all the books that try to fit the user criteria
                     ArrayList<Book> filteredBooks = booksToView(query);
+                    // display the books that have been fetched
                     viewAllBooks(filteredBooks);
                     break;
+
+                // Case 2 - All available books
                 case 2:
+                    // Run a method that exists in the DataRepo for fetching all of the available books
                     viewAllBooks(DataRepo.instance().getAllAvailableBooks());
                     break;
                 case 3:
+                    // Display our entire book collection (even if a book is unavailable)
                     viewAllBooks(DataRepo.instance().getAllBooks());
             }
 
@@ -102,6 +142,7 @@ public class LibraryService
         ConsoleUtil.consoleClear();
     }
 
+    //bookFilter
     public ArrayList<Book> booksToView(String query)
     {
         ArrayList<Book> books = DataRepo.instance().getAllBooks();
