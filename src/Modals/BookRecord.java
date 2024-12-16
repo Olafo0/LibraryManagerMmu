@@ -5,25 +5,16 @@ import java.util.UUID;
 
 public class BookRecord
 {
-    private String ReocrdID;
     private Book book;
     private User member;
-    private LocalDate borrowDate;
     private LocalDate returnDate;
 
-    public BookRecord(Book book, User member, LocalDate returnDate)
+    public BookRecord(Book book, Member member, LocalDate returnDate)
     {
         // Generates a unique identifier
-        this.ReocrdID = UUID.randomUUID().toString();
         this.book = book;
         this.member = member;
-//        this.borrowDate = borrowDate;
         this.returnDate = returnDate;
-    }
-
-    public String getReocrdID()
-    {
-        return ReocrdID;
     }
 
     public Book getBook()
@@ -34,11 +25,6 @@ public class BookRecord
     public User getMember()
     {
         return member;
-    }
-
-    public LocalDate getBorrowDate()
-    {
-        return borrowDate;
     }
 
     public LocalDate getReturnDate()

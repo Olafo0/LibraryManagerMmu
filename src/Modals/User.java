@@ -1,13 +1,21 @@
 package Modals;
 
+
+/*
+ An abstract user class which defines common properties that will be common between other users.
+ For example this class is inherited by member and admin which originally were meant to have additional features
+ not contained within this class. However, due to the time I never implemented that
+
+ Contains getters and setters
+ */
 public abstract class User
 {
-    public int id;
-    public String Role;
-    public String Username;
-    public String Password;
-    public String Firstname;
-    public String Lastname;
+    private int id;
+    private String Role;
+    private String Username;
+    private String Password;
+    private String Firstname;
+    private String Lastname;
 
     public User(int id, String role,String Username, String Password, String Firstname, String Lastname)
     {

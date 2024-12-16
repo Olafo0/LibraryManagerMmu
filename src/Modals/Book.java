@@ -3,11 +3,11 @@ package Modals;
 public class Book
 {
     private String bookId;
-    public String Title;
-    public String Author;
-    public String ISBM;
-    public boolean Borrowed;
-    public String Genre;
+    private String Title;
+    private String Author;
+    private String ISBM;
+    private boolean Borrowed;
+    private String Genre;
 
 
     public Book(String bookId ,String Title, String Author, String ISBM, boolean Borrowed, String Genre)

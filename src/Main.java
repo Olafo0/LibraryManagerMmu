@@ -13,15 +13,12 @@ public class Main
     private static UserService userService;
 
 
-    // Main method
     /*
+    Main method
     Library Service - Responsible for handling everything library related
     User Service - Responsible for everything user related
-
     Contains methods for specific functions that the program offers
-
     boots up the main menu for the user
-
      */
     public static void main(String[] args)
     {
@@ -89,12 +86,15 @@ public class Main
                             System.out.println("NOTE: Username or Password incorrect");
                         }
                         break;
+
                      // Case 2 - Create an account
                     case 2:
                         System.out.println("Create account");
                         // Function responsible for creating a new user
                         userService.createNewUser();
                         break;
+
+
                     // Case 3 - Quit the app
                     case 3:
                         /*
@@ -119,7 +119,7 @@ public class Main
     }
 
     /*
-     This method is responsible for deciding what menu to show to the user depending on their role.
+     This function is responsible for deciding what menu to show to the user depending on their role.
      */
     public static void userMainMenu(User signedUser)
     {
@@ -176,7 +176,7 @@ public class Main
                 switch (choice)
                 {
                     case 1:
-                        libraryService.bookFilter();
+                        libraryService.booksToView();
                         break;
                     case 2:
                         libraryService.addNewBook();
@@ -249,8 +249,8 @@ public class Main
                 {
                     // Case 1 - Viewing the book collection
                     case 1:
-                        // runs the bookFilter which shows the entire book collection with additional functionality
-                        libraryService.bookFilter();
+                        // runs the booksToView which shows the entire book collection with additional functionality
+                        libraryService.booksToView();
                         break;
                     case 2:
                         // Allows the user to check their borrowed books
